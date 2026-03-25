@@ -1,5 +1,5 @@
 // ===== Config =====
-const API = '/api/v1';
+const API = 'https://api.catchmail.io/api/v1';
 
 // ===== State =====
 const S = {

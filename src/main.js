@@ -4,7 +4,7 @@ const API = '/api/v1';
 // ===== State =====
 const S = {
   email: '', domain: 'catchmail.io', msgs: [], selId: null,
-  customDomains: [], timer: null,
+  customDomains: [], timer: null, countdown: null, readIds: new Set(),
 };
 
 // ===== Helpers =====
@@ -38,10 +38,17 @@ function load() {
   try {
     const s=JSON.parse(localStorage.getItem('tm')||'{}');
     S.email=s.email||''; S.domain=s.domain||'catchmail.io'; S.customDomains=s.customDomains||[];
+    S.readIds=new Set(s.readIds||[]);
   } catch(e){}
 }
 function save() {
-  localStorage.setItem('tm', JSON.stringify({email:S.email, domain:S.domain, customDomains:S.customDomains}));
+  localStorage.setItem('tm', JSON.stringify({email:S.email, domain:S.domain, customDomains:S.customDomains, readIds:[...S.readIds]}));
+}
+function markAsRead(id) {
+  if(S.readIds.has(id)) return;
+  S.readIds.add(id); save();
+  const el=document.querySelector(`.msg[data-id="${id}"]`);
+  if(el) el.classList.remove('unread');
 }
 
 // ===== Domains =====
@@ -112,7 +119,9 @@ async function fetchMsgs() {
     const fresh=msgs.filter(m=>!oldIds.has(m.id));
     if(fresh.length) toast(`${fresh.length} new email${fresh.length>1?'s':''}!`);
     S.msgs=msgs;
-    $('#count').textContent=msgs.length;
+    const unread=msgs.filter(m=>!S.readIds.has(m.id)).length;
+    $('#count').textContent=unread||msgs.length;
+    $('#count').title=`${msgs.length} total, ${unread} unread`;
     if(!S.selId) renderList(fresh.map(m=>m.id));
   } catch(e) { console.error(e); }
 }
@@ -140,7 +149,17 @@ async function delMsg(id) {
 }
 
 // ===== Polling =====
-function startPoll() { stopPoll(); S.timer=setInterval(fetchMsgs,5000); }
+function startPoll() {
+  stopPoll();
+  let sec=5;
+  function tick() {
+    sec--;
+    const btn=$('#btn-refresh');
+    if(btn && !btn.classList.contains('spinning')) btn.title=`Auto refresh in ${sec}s`;
+    if(sec<=0) { sec=5; fetchMsgs(); }
+  }
+  S.timer=setInterval(tick,1000);
+}
 function stopPoll() { if(S.timer){clearInterval(S.timer);S.timer=null;} }
 
 // ===== View Toggle (single card) =====
@@ -157,22 +176,28 @@ function showDetail() {
 // ===== Render Messages =====
 function renderList(newIds=[]) {
   const el=$('#view-list');
-  if(!S.msgs.length) {
+  // Sort newest first
+  const sorted=[...S.msgs].sort((a,b)=>new Date(b.date)-new Date(a.date));
+  if(!sorted.length) {
     el.innerHTML=`<div class="empty"><div class="empty-stamp">📭</div><p class="empty-t">No mail yet</p><p class="empty-s">Emails will appear here automatically</p></div>`;
     return;
   }
-  el.innerHTML=S.msgs.map(m=>`
-    <div class="msg ${newIds.includes(m.id)?'new':''}" data-id="${m.id}">
-      <div class="msg-from">${esc(m.from||'Unknown')}</div>
+  el.innerHTML=sorted.map(m=>{
+    const isUnread=!S.readIds.has(m.id);
+    return `
+    <div class="msg ${newIds.includes(m.id)?'new':''} ${isUnread?'unread':''}" data-id="${m.id}">
+      <div class="msg-from">${isUnread?'<span class="unread-dot"></span>':''} ${esc(m.from||'Unknown')}</div>
       <div class="msg-subj">${esc(m.subject||'(No subject)')}</div>
       <div class="msg-info"><span>${fmtDate(m.date)}</span><span>${m.size?fmtSize(m.size):''}</span></div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
   el.querySelectorAll('.msg').forEach(m=>m.addEventListener('click',()=>openMsg(m.dataset.id)));
 }
 
 // ===== Open Message =====
 async function openMsg(id) {
   S.selId=id;
+  markAsRead(id);
   const dc=$('#detail-content');
   dc.innerHTML=`
     <div class="skel" style="height:22px;width:65%;margin-bottom:14px"></div>

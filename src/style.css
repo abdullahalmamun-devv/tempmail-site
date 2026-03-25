@@ -799,6 +799,22 @@ code {
 @keyframes msgPop { from { opacity:0; transform:translateY(-6px) } to { opacity:1; transform:translateY(0) } }
 .msg.new { animation: msgPop 0.25s ease; }
 
+/* ===== Unread State ===== */
+.msg.unread { background: var(--accent-light); }
+.msg.unread .msg-from { color: var(--accent); }
+.msg.unread .msg-subj { color: var(--text); font-weight: 500; }
+
+.unread-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  background: var(--accent);
+  border-radius: 50%;
+  margin-right: 4px;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
 /* ========== MOBILE ========== */
 @media (max-width: 600px) {
   .container { padding: 0 12px; }

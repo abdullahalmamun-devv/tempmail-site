@@ -1,75 +1,135 @@
-# TempMail - Free Disposable Temporary Email
+# ✉️ TempMail — World-Class Disposable Email Service
 
-A modern, fast, and privacy-focused temporary email service built with vanilla HTML, CSS, JavaScript, and Vite. Powered by the [CatchMail API](https://catchmail.io).
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Vite](https://img.shields.io/badge/Vite-8.0.0-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/abdullahalmamun-devv/tempmail-site/graphs/commit-activity)
 
-## ✨ Features
--   **Instant Email Generation:** Create disposable email addresses instantly with no signup required.
--   **Custom Domain Support:** Use your own custom domain (e.g., `test@yourdomain.com`).
--   **Premium Vintage Aesthetic:** Beautifully designed single-card UI with a vintage "ডাক টিকেট" (postage stamp) theme.
--   **Real-time Inbox:** Inbox auto-refreshes to fetch incoming messages instantly.
--   **Mobile First & Responsive:** Optimized for both desktop and mobile screens.
--   **Full API Documentation:** Built-in API documentation page for developers.
--   **Local Storage Persistence:** Remembers your generated email address and domain preference across sessions.
+**TempMail** is a modern, high-performance, and privacy-centric temporary email platform. Built with a focus on speed, security, and a premium user experience, it allows users to generate disposable email addresses instantly without any registration. Powered by the robust [CatchMail API](https://catchmail.io).
 
-## 🚀 Technologies Used
--   Frontend: Vanilla HTML5, CSS3, JavaScript (ES6+)
--   Build Tool: [Vite](https://vitejs.dev/)
--   API Integration: CatchMail.io REST API
+---
 
-## 💻 Local Development Setup
+## 🚀 Key Features
 
-To run this project locally, you need [Node.js](https://nodejs.org/) installed on your machine.
+- **⚡ Instant Generation:** Create a fully functional mailbox in one click.
+- **🎨 Premium Aesthetic:** A unique "Postage Stamp" vintage UI that is both elegant and highly functional.
+- **🌐 Custom Domain Support:** Seamlessly integrate your own domains by simply configuring MX records.
+- **🔄 Real-time Updates:** Automated polling system ensures you see new emails as they arrive without refreshing.
+- **📱 Responsive by Design:** A mobile-first approach ensuring a perfect experience on desktops, tablets, and smartphones.
+- **💾 Local Persistence:** Your active session and preferences are securely saved in your browser's local storage.
+- **🛠 Developer Friendly:** Includes a comprehensive API documentation page for building integrations.
+- **🗑 Privacy First:** No tracking, no logs, and easy message deletion.
 
-1.  **Clone the repository:**
-    ```bash
-    git clone https://github.com/abdullahalmamun-devv/tempmail-site.git
-    cd tempmail-site
-    ```
+---
 
-2.  **Install dependencies:**
-    ```bash
-    npm install
-    ```
+## 🛠 Tech Stack
 
-3.  **Start the development server:**
-    ```bash
-    npm run dev
-    ```
+- **Frontend Core:** Vanilla HTML5, CSS3 (Modern Flexbox/Grid), JavaScript (ES6+ Modules)
+- **Build System:** [Vite](https://vitejs.dev/) for lightning-fast development and optimized production builds.
+- **API Engine:** [CatchMail.io](https://catchmail.io) RESTful API.
+- **Deployment Ready:** Configured for seamless deployment on [Vercel](https://vercel.com).
 
-4.  **Open in Browser:**
-    Navigate to `http://localhost:5173` in your browser.
+---
 
-> **Note on CORS:** The Vite configuration (`vite.config.js`) includes a proxy to forward `/api` requests to `https://api.catchmail.io`. This bypasses browser CORS restrictions during development. In production, ensure your hosting environment supports routing or use the API directly if permitted.
+## 💻 Getting Started
 
-## 🌐 Custom Domain Setup
+### Prerequisites
 
-You can use any domain with this TempMail client.
+- [Node.js](https://nodejs.org/) (v18 or higher recommended)
+- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
 
-**DNS Configuration:**
-1.  Go to your domain's DNS provider (Namecheap, Cloudflare, etc.).
-2.  Add a new **MX Record** pointing to CatchMail:
-    *   **Type:** MX
-    *   **Host:** `@` (or a subdomain)
-    *   **Value:** `smtp.catchmail.io`
-    *   **Priority:** 10
-    *   **TTL:** Auto/3600
-3.  Wait for the DNS to propagate.
-4.  Open the website, click **+ Add Custom Domain**, and enter your domain name.
+### Installation
 
-## 📁 Project Structure
+1. **Clone the Repository:**
+   ```bash
+   git clone https://github.com/abdullahalmamun-devv/tempmail-site.git
+   cd tempmail-site
+   ```
+
+2. **Install Dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Development Mode:**
+   ```bash
+   npm run dev
+   ```
+   *Your app is now running at `http://localhost:5173`!*
+
+4. **Production Build:**
+   ```bash
+   npm run build
+   ```
+
+---
+
+## 🌐 Custom Domain Integration
+
+Empower your brand by using your own domain for temporary mail.
+
+### DNS Configuration
+To use a custom domain, add the following **MX Record** to your DNS provider (e.g., Cloudflare, Namecheap, GoDaddy):
+
+| Type | Host | Value | Priority |
+| :--- | :--- | :--- | :--- |
+| **MX** | `@` | `smtp.catchmail.io` | `10` |
+
+*Note: DNS propagation can take up to 24-48 hours, though it usually happens within minutes.*
+
+---
+
+## 📁 Project Architecture
 
 ```text
 tempmail-site/
-├── docs.html           # Full API Documentation Page
-├── index.html          # Main Application Page
-├── package.json        # NPM dependencies & scripts
-├── README.md           # This documentation file
-├── vite.config.js      # Vite configuration & proxy settings
-├── public/             # Static assets (favicons, etc.)
-└── src/
-    ├── main.js         # Core application logic, API calls, and UI state
-    └── style.css       # Complete aesthetic, layout, and mobile breakpoints
+├── public/             # Static assets (favicons, manifest, etc.)
+├── src/
+│   ├── main.js         # State management, API integration, & UI logic
+│   └── style.css       # Design system, components, & responsiveness
+├── index.html          # Main Application Entry Point
+├── docs.html           # Interactive API Documentation
+├── vercel.json         # Vercel deployment configuration
+├── vite.config.js      # Vite build & proxy settings
+└── package.json        # Project metadata & dependencies
 ```
 
+---
+
+## 🤝 Contributing
+
+Contributions make the open-source community an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+---
+
+## 🛡 Security & Privacy
+
+TempMail is built with a privacy-first mindset.
+- No personal data is ever requested or stored.
+- All email data is fetched directly from the CatchMail API.
+- For security reasons, we recommend not using temporary emails for sensitive accounts (e.g., banking).
+
+---
+
 ## 📜 License
-This project is open-source and free to use. Powered by CatchMail.io.
+
+Distributed under the **MIT License**. See `LICENSE` for more information.
+
+---
+
+## ✨ Acknowledgments
+
+- Powered by [CatchMail.io](https://catchmail.io)
+- Icons and UI inspiration from the open-source community.
+
+---
+
+<p align="center">
+  Built with ❤️ for the Privacy-Conscious Web
+</p>
